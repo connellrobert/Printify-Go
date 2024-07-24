@@ -10,3 +10,9 @@ type Image struct {
 	PreviewUrl string `json:"preview_url"`
 	UploadTime string `json:"upload_time"`
 }
+
+type ImageUpload struct {
+	Filename string `json:"filename"`
+	Contents []byte `json:"contents,omitempty"`
+	Url      string `json:"url,omitempty"`
+}

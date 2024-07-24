@@ -166,5 +166,9 @@ type Publish struct {
 type PublishReference struct {
 	Id                 string `json:"id"`
 	Handle             string `json:"handle"`
-	ShippingTemplateId string `json:"shipping_template_id"`
+	ShippingTemplateId string `json:"shipping_template_id,omitempty"`
+}
+
+type PublishFailedRequest struct {
+	Reason string `json:"reason"`
 }

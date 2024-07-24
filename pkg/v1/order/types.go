@@ -174,3 +174,16 @@ type PrintAreaValue struct {
 	Y     float64 `json:"y"`
 	Angle float64 `json:"angle"`
 }
+
+type ShipmentCalculationRequest struct {
+	LineItems []LineItem `json:"line_items"`
+	AddressTo Address    `json:"address_to"`
+}
+
+type ShipmentCalculationResponse struct {
+	Standard        int `json:"standard"`
+	Express         int `json:"express"`
+	Priority        int `json:"priority"`
+	PrintifyExpress int `json:"printify_express"`
+	Economy         int `json:"economy"`
+}
