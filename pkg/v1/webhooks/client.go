@@ -1,10 +1,6 @@
 package webhooks
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
@@ -16,74 +12,9 @@ var (
 	DELETE_WEBHOOK_ENDPOINT         = ENDPOINT + "/%d/webhooks/%s.json"
 )
 
-func ListWebhooksForShop(c *common.Client) ([]Webhook, error) {
-	req, err := http.NewRequest("GET", LIST_WEBHOOKS_FOR_SHOP_ENDPOINT, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var webhooks []Webhook
-	err = json.NewDecoder(resp.Body).Decode(&webhooks)
-	if err != nil {
-		return nil, err
-	}
-	return webhooks, nil
-}
-
-func CreateWebhook(c *common.Client, shopId int, topic, url, secret string) (*Webhook, error) {
-	req, err := http.NewRequest("POST", CREATE_WEBHOOK_ENDPOINT, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var webhook Webhook
-	err = json.NewDecoder(resp.Body).Decode(&webhook)
-	if err != nil {
-		return nil, err
-	}
-	return &webhook, nil
-}
-
-func ModifyWebhook(c *common.Client, shopId int, webhookId string, topic, url, secret string) (*Webhook, error) {
-	req, err := http.NewRequest("PUT", MODIFY_WEBHOOK_ENDPOINT, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var webhook Webhook
-	err = json.NewDecoder(resp.Body).Decode(&webhook)
-	if err != nil {
-		return nil, err
-	}
-	return &webhook, nil
-}
-
-func DeleteWebhook(c *common.Client, shopId int, webhookId string) error {
-	req, err := http.NewRequest("DELETE", DELETE_WEBHOOK_ENDPOINT, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return nil
-}
+var (
+	ListWebhooksForShop = common.ListResources[Webhook](LIST_WEBHOOKS_FOR_SHOP_ENDPOINT)
+	CreateWebhook       = common.PostResourceWithReturnAndId[Webhook, Webhook, int](CREATE_WEBHOOK_ENDPOINT)
+	ModifyWebhook       = common.PutResourceWithReturnAndTwoId[Webhook, Webhook, int, string](MODIFY_WEBHOOK_ENDPOINT)
+	DeleteWebhook       = common.DeleteResourceWithTwoId[Webhook, int, string](DELETE_WEBHOOK_ENDPOINT)
+)

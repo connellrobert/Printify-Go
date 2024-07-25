@@ -1,9 +1,9 @@
 package webhooks
 
 type Webhook struct {
-	Id     string `json:"id"`
+	Id     string `json:"id,omitempty"`
 	Topic  string `json:"topic"`
 	Url    string `json:"url"`
-	ShopId int    `json:"shop_id"`
-	Secret string `json:"secret"`
+	ShopId int    `json:"shop_id,omitempty"`
+	Secret string `json:"secret,omitempty"`
 }

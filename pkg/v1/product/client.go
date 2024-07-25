@@ -1,11 +1,7 @@
 package product
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 
 	"github.com/connellrobert/printify-go/pkg/common"
 )
@@ -23,201 +19,14 @@ var (
 	NOTIFY_PRODUCT_UNPUBLISHED_ENDPOINT         = fmt.Sprintf("%s/%%d/products/%%d/unpublished.json", ENDPOINT)
 )
 
-func ListProducts(c *common.Client, shopId int) ([]Product, error) {
-	req, err := http.NewRequest("GET", c.Host+fmt.Sprintf(LIST_PRODUCTS_ENDPOINT, shopId), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var products []Product
-	err = json.NewDecoder(resp.Body).Decode(&products)
-	if err != nil {
-		return nil, err
-	}
-
-	return products, nil
-}
-
-func GetProduct(c *common.Client, shopId, productId int) (*Product, error) {
-	req, err := http.NewRequest("GET", c.Host+fmt.Sprintf(GET_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var product Product
-	err = json.NewDecoder(resp.Body).Decode(&product)
-	if err != nil {
-		return nil, err
-	}
-
-	return &product, nil
-}
-
-func CreateProduct(c *common.Client, shopId int, product Product) (*Product, error) {
-	req, err := http.NewRequest("POST", c.Host+fmt.Sprintf(CREATE_PRODUCT_ENDPOINT, shopId), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body := new(bytes.Buffer)
-	err = json.NewEncoder(body).Encode(product)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var newProduct Product
-	err = json.NewDecoder(resp.Body).Decode(&newProduct)
-	if err != nil {
-		return nil, err
-	}
-
-	return &newProduct, nil
-}
-
-func UpdateProduct(c *common.Client, shopId, productId int, product Product) (*Product, error) {
-	req, err := http.NewRequest("PUT", c.Host+fmt.Sprintf(UPDATE_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body := new(bytes.Buffer)
-	err = json.NewEncoder(body).Encode(product)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var updatedProduct Product
-	err = json.NewDecoder(resp.Body).Decode(&updatedProduct)
-	if err != nil {
-		return nil, err
-	}
-
-	return &updatedProduct, nil
-}
-
-func DeleteProduct(c *common.Client, shopId, productId int) error {
-	req, err := http.NewRequest("DELETE", c.Host+fmt.Sprintf(DELETE_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	return nil
-}
-
-func PublishProduct(c *common.Client, shopId, productId int, publish Publish) error {
-	req, err := http.NewRequest("POST", c.Host+fmt.Sprintf(PUBLISH_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return err
-	}
-	body := new(bytes.Buffer)
-	err = json.NewEncoder(body).Encode(publish)
-	if err != nil {
-		return err
-	}
-	req.Body = io.NopCloser(body)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return nil
-}
-
-func UpdatePublishStatusToSucceeded(c *common.Client, shopId, productId int, external PublishReference) error {
-	req, err := http.NewRequest("POST", c.Host+fmt.Sprintf(PUBLISH_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return err
-	}
-	body := new(bytes.Buffer)
-	err = json.NewEncoder(body).Encode(external)
-	if err != nil {
-		return err
-	}
-	req.Body = io.NopCloser(body)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return nil
-}
-
-func UpdatePublishStatusToFailed(c *common.Client, shopId, productId int, reason PublishFailedRequest) error {
-	req, err := http.NewRequest("POST", c.Host+fmt.Sprintf(PUBLISH_PRODUCT_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return err
-	}
-	body := new(bytes.Buffer)
-	err = json.NewEncoder(body).Encode(reason)
-	if err != nil {
-		return err
-	}
-	req.Body = io.NopCloser(body)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	return nil
-}
-
-func NotifyProductUnpublished(c *common.Client, shopId, productId int) error {
-	req, err := http.NewRequest("POST", c.Host+fmt.Sprintf(NOTIFY_PRODUCT_UNPUBLISHED_ENDPOINT, shopId, productId), nil)
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.PAT))
-
-	resp, err := c.Client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	return nil
-}
+var (
+	ListProducts                   = common.ListResourceWithId[Product, int](LIST_PRODUCTS_ENDPOINT)
+	GetProduct                     = common.GetResourceWithTwoId[Product, int, int](GET_PRODUCT_ENDPOINT)
+	CreateProduct                  = common.PostResourceWithReturnAndId[Product, Product, int](CREATE_PRODUCT_ENDPOINT)
+	UpdateProduct                  = common.PutResourceWithReturnAndTwoId[Product, Product, int, int](UPDATE_PRODUCT_ENDPOINT)
+	DeleteProduct                  = common.DeleteResourceWithTwoId[Product, int, int](DELETE_PRODUCT_ENDPOINT)
+	PublishProduct                 = common.PostResourceWithoutReturnTwoId[Publish, int, int](PUBLISH_PRODUCT_ENDPOINT)
+	UpdatePublishStatusToSucceeded = common.PostResourceWithoutReturnTwoId[PublishReference, int, int](UPDATE_PUBLISH_STATUS_TO_SUCCEEDED_ENDPOINT)
+	UpdatePublishStatusToFailed    = common.PostResourceWithoutReturnTwoId[PublishFailedRequest, int, int](UPDATE_PUBLISH_STATUS_TO_FAILED_ENDPOINT)
+	NotifyProductUnpublished       = common.PostNoResourceWithoutReturnTwoId[int, int](NOTIFY_PRODUCT_UNPUBLISHED_ENDPOINT)
+)
