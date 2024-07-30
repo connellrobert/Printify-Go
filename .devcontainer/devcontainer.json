@@ -8,7 +8,7 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers/features/go:1": {
-			"version": "1.22.1"
+			"version": "1.22.5"
 		}
 	},
 

@@ -15,7 +15,7 @@ type Client struct {
 	Host   string
 	Client *http.Client
 	PAT    string
-	ShopID string
+	ShopID int
 }
 
 func NewClient(pat string, shopId int) *Client {
@@ -23,6 +23,7 @@ func NewClient(pat string, shopId int) *Client {
 		Host:   HOST,
 		Client: &http.Client{},
 		PAT:    pat,
+		ShopID: shopId,
 	}
 }
 

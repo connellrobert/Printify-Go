@@ -124,7 +124,7 @@ type Placeholder struct {
 
 type Image struct {
 	// See upload images for reference on how to upload images and get all needed properties.
-	Id int `json:"id"`
+	Id string `json:"id"`
 	// Name of an image file.
 	Name string `json:"name"`
 	// Type of an image. Valid image types are image/png, image/jpg, image/jpeg.

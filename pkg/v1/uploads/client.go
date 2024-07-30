@@ -17,6 +17,6 @@ var (
 var (
 	ListUploadedImages   = common.ListResources[Image](LIST_UPLOADED_IMAGES_ENDPOINT)
 	GetUploadedImage     = common.GetResourceById[Image, string](GET_UPLOADED_IMAGE_ENDPOINT)
-	UploadImage          = common.PostResourceWithReturn[Image, Image](UPLOAD_IMAGE_ENDPOINT)
+	UploadImage          = common.PostResourceWithReturn[ImageUpload, Image](UPLOAD_IMAGE_ENDPOINT)
 	ArchiveUploadedImage = common.PostNoResourceWithoutReturn[string](ARCHIVE_UPLOADED_IMAGE_ENDPOINT)
 )
