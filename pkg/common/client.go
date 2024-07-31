@@ -68,6 +68,17 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		}
 
 		defer resp.Body.Close()
+		// Check for nested data field
+		var r interface{}
+		err = json.NewDecoder(resp.Body).Decode(&r)
+		if err != nil {
+			return nil, err
+		}
+		if data, ok := r.(map[string]interface{})["data"]; ok {
+			var resources []T
+			resources = data.([]T)
+			return resources, nil
+		}
 		var resources []T
 		err = json.NewDecoder(resp.Body).Decode(&resources)
 		if err != nil {
