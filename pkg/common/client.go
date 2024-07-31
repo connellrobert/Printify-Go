@@ -74,6 +74,7 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		if err != nil {
 			return nil, err
 		}
+		fmt.Printf("Response: %+v\n", r)
 		if data, ok := r.(map[string]interface{})["data"]; ok {
 			fmt.Print("Data field found\n")
 			resources := data.([]T)
