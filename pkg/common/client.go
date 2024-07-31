@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/connellrobert/printify-go/pkg/v1/pagination"
 )
 
 const (
@@ -69,26 +71,23 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		if err != nil {
 			return nil, err
 		}
-		var r interface{}
-		err = json.NewDecoder(resp.Body).Decode(&r)
+		defer resp.Body.Close()
+		if resp.StatusCode >= 400 {
+			var r map[string]interface{}
+			err = json.NewDecoder(resp.Body).Decode(&r)
+			if err != nil {
+				return nil, err
+			}
+			return nil, fmt.Errorf("error: %+v", r)
+		}
+
+		var resources pagination.APIPagination[T]
+		err = json.NewDecoder(resp.Body).Decode(&resources)
 		if err != nil {
 			return nil, err
 		}
-
-		defer resp.Body.Close()
-		if resp.StatusCode >= 400 {
-			return nil, fmt.Errorf("error: %+v", r.(map[string]interface{}))
-		}
 		// Check for nested data field
-		fmt.Printf("Response: %+v\n", r)
-		if data, ok := r.(map[string]interface{})["data"]; ok {
-			fmt.Print("Data field found\n")
-			resources := data.([]T)
-			return resources, nil
-		}
-		fmt.Print("Data field not found\n")
-		resources := r.([]T)
-		return resources, nil
+		return resources.Data, nil
 	}
 }
 func ListResourceWithTwoID[T any, IDONE, IDTWO int | string](endpoint string) func(c *Client, idOne IDONE, idTwo IDTWO) ([]T, error) {

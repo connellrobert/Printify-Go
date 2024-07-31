@@ -1,6 +1,6 @@
 package pagination
 
-type APIPagination struct {
+type APIPagination[T any] struct {
 	FirstPageUrl    string `json:"first_page_url"`
 	PreviousPageUrl string `json:"prev_page_url"`
 	NextPageUrl     string `json:"next_page_url"`
@@ -11,4 +11,5 @@ type APIPagination struct {
 	PerPage         int    `json:"per_page"`
 	From            int    `json:"from"`
 	To              int    `json:"to"`
+	Data            []T    `json:"data"`
 }
