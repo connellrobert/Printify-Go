@@ -7,7 +7,7 @@ import (
 // The Product resource lets you list, create, update, delete and publish products to a store.
 type Product struct {
 	// A unique string identifier for the product. Each id is unique across the Printify system.
-	Id int `json:"id"`
+	Id string `json:"id"`
 	// The name of the product.
 	Title string `json:"title"`
 	// A description of the product. Supports HTML formatting.
