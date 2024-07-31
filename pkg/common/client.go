@@ -69,7 +69,7 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		if err != nil {
 			return nil, err
 		}
-		var r map[string]interface{}
+		var r interface{}
 		err = json.NewDecoder(resp.Body).Decode(&r)
 		if err != nil {
 			return nil, err
@@ -77,7 +77,7 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 
 		defer resp.Body.Close()
 		if resp.StatusCode >= 400 {
-			return nil, fmt.Errorf("error: %+v", r)
+			return nil, fmt.Errorf("error: %+v", r.(map[string]interface{}))
 		}
 		// Check for nested data field
 		fmt.Printf("Response: %+v\n", r)
