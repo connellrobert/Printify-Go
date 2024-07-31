@@ -63,7 +63,7 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		if err != nil {
 			return nil, err
 		}
-
+		fmt.Print(c.PAT)
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := c.Client.Do(req)
 		if err != nil {
