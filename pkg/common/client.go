@@ -42,6 +42,9 @@ func ListResources[T any](endpoint string) func(c *Client) ([]T, error) {
 			return nil, err
 		}
 		defer resp.Body.Close()
+		if resp.StatusCode >= 400 {
+			return nil, fmt.Errorf("error: %s", resp.Body)
+		}
 
 		var resources []T
 		err = json.NewDecoder(resp.Body).Decode(&resources)
