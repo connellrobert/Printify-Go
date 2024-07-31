@@ -75,10 +75,12 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 			return nil, err
 		}
 		if data, ok := r.(map[string]interface{})["data"]; ok {
+			fmt.Print("Data field found\n")
 			var resources []T
 			resources = data.([]T)
 			return resources, nil
 		}
+		fmt.Print("Data field not found\n")
 		var resources []T
 		err = json.NewDecoder(resp.Body).Decode(&resources)
 		if err != nil {
