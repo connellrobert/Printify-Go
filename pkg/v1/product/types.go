@@ -40,7 +40,9 @@ type Product struct {
 	// "regular" - to extend print area to the sides of canvas
 	// "mirror" - to keep original print area and mirror it to the sides
 	// "off" - stop printing on sides
-	PrintDetails common.PrintDetails `json:"print_details"`
+	// Note: API documentation states this is a object, but actual results show it as a list. We're using what the
+	//		API is actually returning.
+	PrintDetails []common.PrintDetails `json:"print_details"`
 	// Updated by sales channel with publishing succeeded endpoint. Id and handle are external references in the sales channel. See publishing succeeded endpoint for more reference.
 	// Shipping Template ID is optional and can be passed during product creation or update.
 	External PublishReference `json:"external"`
