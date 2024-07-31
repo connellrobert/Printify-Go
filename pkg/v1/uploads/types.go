@@ -12,7 +12,7 @@ type Image struct {
 }
 
 type ImageUpload struct {
-	Filename string `json:"filename"`
+	Filename string `json:"file_name"`
 	Contents []byte `json:"contents,omitempty"`
 	Url      string `json:"url,omitempty"`
 }
