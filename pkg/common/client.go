@@ -71,6 +71,9 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		}
 
 		defer resp.Body.Close()
+		if resp.StatusCode >= 400 {
+			return nil, fmt.Errorf("error: %s", resp.Body)
+		}
 		// Check for nested data field
 		var r interface{}
 		err = json.NewDecoder(resp.Body).Decode(&r)
