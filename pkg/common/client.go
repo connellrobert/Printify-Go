@@ -322,6 +322,14 @@ func PostResourceWithReturnAndId[T any, R any, ID int | string](endpoint string)
 		if err != nil {
 			return nil, err
 		}
+		if resp.StatusCode >= 400 {
+			var r map[string]interface{}
+			err = json.NewDecoder(resp.Body).Decode(&r)
+			if err != nil {
+				return nil, err
+			}
+			return nil, fmt.Errorf("error: %+v", r)
+		}
 		defer resp.Body.Close()
 
 		var resource R
