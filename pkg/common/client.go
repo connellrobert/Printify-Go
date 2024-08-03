@@ -38,8 +38,7 @@ func ListResources[T any](endpoint string) func(c *Client) ([]T, error) {
 
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
-
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +66,7 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		}
 		fmt.Println(c.PAT)
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -99,7 +98,7 @@ func ListResourceWithTwoID[T any, IDONE, IDTWO int | string](endpoint string) fu
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -122,7 +121,7 @@ func GetResourceById[T any, ID int | string](endpoint string) func(c *Client, id
 		}
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -145,7 +144,7 @@ func GetResourceWithTwoId[T any, IDONE, IDTWO int | string](endpoint string) fun
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -173,8 +172,7 @@ func PostResourceWithoutReturn[T any](endpoint string) func(c *Client, body T) e
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
-
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
@@ -198,18 +196,9 @@ func PostResourceWithReturn[T any, R any](endpoint string) func(c *Client, body 
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
-
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
-		}
-		if resp.StatusCode >= 400 {
-			var r map[string]interface{}
-			err = json.NewDecoder(resp.Body).Decode(&r)
-			if err != nil {
-				return nil, err
-			}
-			return nil, fmt.Errorf("error: %+v", r)
 		}
 		defer resp.Body.Close()
 
@@ -238,7 +227,7 @@ func PostResourceWithReturnTwoId[T any, R any, IDONE, IDTWO int | string](endpoi
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
 
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -268,8 +257,7 @@ func PostResourceWithoutReturnTwoId[T any, IDONE, IDTWO int | string](endpoint s
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
-
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
@@ -289,7 +277,7 @@ func PostNoResourceWithReturnTwoId[T any, IDONE, IDTWO int | string](endpoint st
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -317,19 +305,7 @@ func PostResourceWithReturnAndId[T any, R any, ID int | string](endpoint string)
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
-
-		resp, err := c.Client.Do(req)
-		if err != nil {
-			return nil, err
-		}
-		if resp.StatusCode >= 400 {
-			var r map[string]interface{}
-			err = json.NewDecoder(resp.Body).Decode(&r)
-			if err != nil {
-				return nil, err
-			}
-			return nil, fmt.Errorf("error: %+v", r)
-		}
+		resp, err := checkResponse(c, req)
 		defer resp.Body.Close()
 
 		var resource R
@@ -351,7 +327,8 @@ func PostNoResourceWithoutReturnTwoId[IDONE, IDTWO int | string](endpoint string
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
@@ -369,7 +346,7 @@ func PostNoResourceWithoutReturn[ID int | string](endpoint string) func(c *Clien
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
@@ -393,7 +370,7 @@ func PutResourceWithReturnAndTwoId[T any, R any, IDONE, IDTWO int | string](endp
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
 
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return nil, err
 		}
@@ -418,7 +395,7 @@ func DeleteResourceWithTwoId[T any, IDONE, IDTWO int | string](endpoint string) 
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
@@ -435,11 +412,27 @@ func DeleteResourceWithId[T any, ID int | string](endpoint string) func(c *Clien
 			return err
 		}
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
-		resp, err := c.Client.Do(req)
+		resp, err := checkResponse(c, req)
 		if err != nil {
 			return err
 		}
 		defer resp.Body.Close()
 		return nil
 	}
+}
+
+func checkResponse(c *Client, req *http.Request) (*http.Response, error) {
+	resp, err := c.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode >= 400 {
+		var r map[string]interface{}
+		err = json.NewDecoder(resp.Body).Decode(&r)
+		if err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf("error: %+v", r)
+	}
+	return resp, nil
 }
