@@ -64,7 +64,6 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(c.PAT)
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
 		if err != nil {
@@ -306,6 +305,9 @@ func PostResourceWithReturnAndId[T any, R any, ID int | string](endpoint string)
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
 		resp, err := checkResponse(c, req)
+		if err != nil {
+			return nil, err
+		}
 		defer resp.Body.Close()
 
 		var resource R
