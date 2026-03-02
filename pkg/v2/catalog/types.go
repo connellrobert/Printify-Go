@@ -1,7 +1,43 @@
 package catalog
 
+type ShippingListAttributeCountry struct {
+	Code string `json:"code,omitempty"`
+}
+
+type ShippingListAttributeHandlingTime struct {
+	From int `json:"from,omitempty"`
+	To   int `json:"to,omitempty"`
+}
+
+type ShippingListAttributeShippingCostItem struct {
+	Amount   int    `json:"amount,omitempty"`
+	Currency string `json:"currency,omitempty"`
+}
+
+type ShippingListAttributeShippingCost struct {
+	FirstItem       ShippingListAttributeShippingCostItem `json:"first_item,omitempty"`
+	AdditionalItems ShippingListAttributeShippingCostItem `json:"additional_items,omitempty"`
+}
+
+type ShippingListAttribute struct {
+	Name           string                            `json:"name,omitempty"`
+	ShippingType   string                            `json:"shipping_type,omitempty"`
+	VariantId      int                               `json:"variant_id,omitempty"`
+	ShippingPlanId string                            `json:"shipping_plan_id,omitempty"`
+	Country        ShippingListAttributeCountry      `json:"country,omitempty"`
+	HandlingTime   ShippingListAttributeHandlingTime `json:"handling_time,omitempty"`
+	ShippingCost   ShippingListAttributeShippingCost `json:"shipping_cost,omitempty"`
+}
+
 type ShippingList struct {
-	Name string `json:"name"`
+	Type      string                `json:"type"`
+	Id        string                `json:"id"`
+	Attribute ShippingListAttribute `json:"attributes"`
+}
+
+type ShippingInfo struct {
+	Data  []SpecificShipping `json:"data"`
+	Links map[string]string  `json:"links"`
 }
 
 type SpecificShipping struct {
