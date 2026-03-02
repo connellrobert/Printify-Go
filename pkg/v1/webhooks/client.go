@@ -1,15 +1,17 @@
 package webhooks
 
 import (
+	"fmt"
+
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
 var (
 	ENDPOINT                        = "/v1/shops"
-	LIST_WEBHOOKS_FOR_SHOP_ENDPOINT = ENDPOINT + "/%d/webhooks.json"
-	CREATE_WEBHOOK_ENDPOINT         = ENDPOINT + "/%d/webhooks.json"
-	MODIFY_WEBHOOK_ENDPOINT         = ENDPOINT + "/%d/webhooks/%s.json"
-	DELETE_WEBHOOK_ENDPOINT         = ENDPOINT + "/%d/webhooks/%s.json"
+	LIST_WEBHOOKS_FOR_SHOP_ENDPOINT = fmt.Sprintf("%s/%%d/webhooks.json", ENDPOINT)
+	CREATE_WEBHOOK_ENDPOINT         = fmt.Sprintf("%s/%%d/webhooks.json", ENDPOINT)
+	MODIFY_WEBHOOK_ENDPOINT         = fmt.Sprintf("%s/%%d/webhooks/%%s.json", ENDPOINT)
+	DELETE_WEBHOOK_ENDPOINT         = fmt.Sprintf("%s/%%d/webhooks/%%s.json", ENDPOINT)
 )
 
 var (

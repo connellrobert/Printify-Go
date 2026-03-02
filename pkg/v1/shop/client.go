@@ -1,13 +1,15 @@
 package shop
 
 import (
+	"fmt"
+
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
 var (
 	ENDPOINT             = "/v1/shops"
-	LIST_SHOPS_ENDPOINT  = ENDPOINT + ".json"
-	DELETE_SHOP_ENDPOINT = ENDPOINT + "/%d.json"
+	LIST_SHOPS_ENDPOINT  = fmt.Sprintf("%s.json", ENDPOINT)
+	DELETE_SHOP_ENDPOINT = fmt.Sprintf("%s/%%d.json", ENDPOINT)
 )
 
 var (
