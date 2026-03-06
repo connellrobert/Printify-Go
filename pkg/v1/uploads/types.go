@@ -1,5 +1,6 @@
 package uploads
 
+// Image represents an uploaded asset returned by uploads endpoints.
 type Image struct {
 	Id         string `json:"id"`
 	FileName   string `json:"file_name"`
@@ -11,6 +12,7 @@ type Image struct {
 	UploadTime string `json:"upload_time"`
 }
 
+// ImageUpload represents an upload request body for /v1/uploads/images.json.
 type ImageUpload struct {
 	Filename string `json:"file_name"`
 	Contents []byte `json:"contents,omitempty"`

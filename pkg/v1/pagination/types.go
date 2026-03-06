@@ -1,5 +1,6 @@
 package pagination
 
+// APIPagination models Printify's paginated list response envelope.
 type APIPagination[T any] struct {
 	FirstPageUrl    string `json:"first_page_url"`
 	PreviousPageUrl string `json:"prev_page_url"`

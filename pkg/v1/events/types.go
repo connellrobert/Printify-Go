@@ -1,5 +1,6 @@
 package events
 
+// Event represents a webhook event payload from Printify.
 type Event struct {
 	Id        string        `json:"id"`
 	Type      string        `json:"type"`
@@ -7,12 +8,14 @@ type Event struct {
 	Resource  EventResource `json:"resource"`
 }
 
+// EventResource identifies the resource associated with an event.
 type EventResource struct {
 	Id   string            `json:"id"`
 	Type string            `json:"type"`
 	Data EventResourceData `json:"data"`
 }
 
+// EventResourceData contains resource-specific event metadata.
 type EventResourceData struct {
 	ShopId int    `json:"shop_id"`
 	Reason string `json:"reason"`

@@ -67,6 +67,7 @@ type ProductOptions struct {
 	Values []ProductOptionValue `json:"values"`
 }
 
+// ProductOptionValue represents a single selectable value within a product option.
 type ProductOptionValue struct {
 	Id     int      `json:"id"`
 	Title  string   `json:"title"`
@@ -117,6 +118,7 @@ type PrintArea struct {
 	Placeholders []Placeholder `json:"placeholders"`
 }
 
+// Placeholder represents one named printable position inside a print area.
 type Placeholder struct {
 	// See blueprint placeholder properties from the catalog endpoint for reference on how to get positions.
 	Position string `json:"position"`
@@ -124,6 +126,7 @@ type Placeholder struct {
 	Images []Image `json:"images"`
 }
 
+// Image represents an image placement inside a print area placeholder.
 type Image struct {
 	// See upload images for reference on how to upload images and get all needed properties.
 	Id string `json:"id"`
@@ -171,6 +174,7 @@ type PublishReference struct {
 	ShippingTemplateId string `json:"shipping_template_id,omitempty"`
 }
 
+// PublishFailedRequest represents a failure callback payload for publishing_failed.
 type PublishFailedRequest struct {
 	Reason string `json:"reason"`
 }

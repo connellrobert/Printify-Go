@@ -1,5 +1,6 @@
 package webhooks
 
+// Webhook represents a webhook configuration for a shop.
 type Webhook struct {
 	Id     string `json:"id,omitempty"`
 	Topic  string `json:"topic"`

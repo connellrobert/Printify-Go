@@ -20,13 +20,106 @@ var (
 )
 
 var (
-	ListProducts                   = common.ListResourceWithId[Product, int](LIST_PRODUCTS_ENDPOINT)
-	GetProduct                     = common.GetResourceWithTwoId[Product, int, int](GET_PRODUCT_ENDPOINT)
-	CreateProduct                  = common.PostResourceWithReturnAndId[Product, Product, int](CREATE_PRODUCT_ENDPOINT)
-	UpdateProduct                  = common.PutResourceWithReturnAndTwoId[Product, Product, int, int](UPDATE_PRODUCT_ENDPOINT)
-	DeleteProduct                  = common.DeleteResourceWithTwoId[Product, int, int](DELETE_PRODUCT_ENDPOINT)
-	PublishProduct                 = common.PostResourceWithoutReturnTwoId[Publish, int, int](PUBLISH_PRODUCT_ENDPOINT)
+	// ListProducts calls GET /v1/shops/{shopId}/products.json and returns products in a shop.
+	//
+	// Signature:
+	//	func(c *common.Client, id int) ([]Product, error)
+	// Parameter mapping:
+	//	id -> {shopId}
+	//
+	// shopId can be discovered with shop.ListShops.
+	ListProducts = common.ListResourceWithId[Product, int](LIST_PRODUCTS_ENDPOINT)
+	// GetProduct calls GET /v1/shops/{shopId}/products/{productId}.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int) (*Product, error)
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	GetProduct = common.GetResourceWithTwoId[Product, int, int](GET_PRODUCT_ENDPOINT)
+	// CreateProduct calls POST /v1/shops/{shopId}/products.json.
+	//
+	// Signature:
+	//	func(c *common.Client, id int, body Product) (*Product, error)
+	// Parameter mapping:
+	//	id -> {shopId}
+	//	body -> product payload
+	//
+	// shopId can be discovered with shop.ListShops.
+	CreateProduct = common.PostResourceWithReturnAndId[Product, Product, int](CREATE_PRODUCT_ENDPOINT)
+	// UpdateProduct calls PUT /v1/shops/{shopId}/products/{productId}.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int, body Product) (*Product, error)
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//	body -> product payload
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	UpdateProduct = common.PutResourceWithReturnAndTwoId[Product, Product, int, int](UPDATE_PRODUCT_ENDPOINT)
+	// DeleteProduct calls DELETE /v1/shops/{shopId}/products/{productId}.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int) error
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	DeleteProduct = common.DeleteResourceWithTwoId[Product, int, int](DELETE_PRODUCT_ENDPOINT)
+	// PublishProduct calls POST /v1/shops/{shopId}/products/{productId}/publish.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int, body Publish) error
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//	body -> publish options
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	PublishProduct = common.PostResourceWithoutReturnTwoId[Publish, int, int](PUBLISH_PRODUCT_ENDPOINT)
+	// UpdatePublishStatusToSucceeded calls
+	// POST /v1/shops/{shopId}/products/{productId}/publishing_succeeded.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int, body PublishReference) error
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//	body -> external channel references
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
 	UpdatePublishStatusToSucceeded = common.PostResourceWithoutReturnTwoId[PublishReference, int, int](UPDATE_PUBLISH_STATUS_TO_SUCCEEDED_ENDPOINT)
-	UpdatePublishStatusToFailed    = common.PostResourceWithoutReturnTwoId[PublishFailedRequest, int, int](UPDATE_PUBLISH_STATUS_TO_FAILED_ENDPOINT)
-	NotifyProductUnpublished       = common.PostNoResourceWithoutReturnTwoId[int, int](NOTIFY_PRODUCT_UNPUBLISHED_ENDPOINT)
+	// UpdatePublishStatusToFailed calls
+	// POST /v1/shops/{shopId}/products/{productId}/publishing_failed.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int, body PublishFailedRequest) error
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//	body -> failure reason payload
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	UpdatePublishStatusToFailed = common.PostResourceWithoutReturnTwoId[PublishFailedRequest, int, int](UPDATE_PUBLISH_STATUS_TO_FAILED_ENDPOINT)
+	// NotifyProductUnpublished calls POST /v1/shops/{shopId}/products/{productId}/unpublished.json.
+	//
+	// Signature:
+	//	func(c *common.Client, idOne int, idTwo int) error
+	// Parameter mapping:
+	//	idOne -> {shopId}
+	//	idTwo -> {productId}
+	//
+	// shopId can be discovered with shop.ListShops.
+	// productId can be discovered with ListProducts(idOne).
+	NotifyProductUnpublished = common.PostNoResourceWithoutReturnTwoId[int, int](NOTIFY_PRODUCT_UNPUBLISHED_ENDPOINT)
 )

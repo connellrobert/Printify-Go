@@ -1,5 +1,6 @@
 package order
 
+// Order represents an order resource returned by shop order endpoints.
 type Order struct {
 	// A unique string identifier for the order. Each id is unique across the Printify system.
 	Id string `json:"id"`
@@ -57,6 +58,7 @@ type Order struct {
 	PrintifyConnect PrintifyConnect `json:"printify_connect"`
 }
 
+// Address represents a recipient shipping address.
 type Address struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -70,6 +72,7 @@ type Address struct {
 	Company   string `json:"company"`
 }
 
+// LineItem represents a single purchasable item in an order.
 type LineItem struct {
 	// A unique string identifier for the product. Each id is unique across the Printify system.
 	ProductId string `json:"product_id"`
@@ -105,6 +108,7 @@ type LineItem struct {
 	FulfilledAt string `json:"fulfilled_at"`
 }
 
+// LineItemMetadata contains descriptive metadata for an order line item.
 type LineItemMetadata struct {
 	// The name of the product.
 	Title string `json:"title"`
@@ -118,6 +122,7 @@ type LineItemMetadata struct {
 	Country string `json:"country"`
 }
 
+// OrderMetadata contains source-system metadata for an order.
 type OrderMetadata struct {
 	// Describes the order type, can be external, manual, or sample.
 	OrderType string `json:"order_type"`
@@ -129,6 +134,7 @@ type OrderMetadata struct {
 	ShopFulfilledAt string `json:"shop_fulfilled_at"`
 }
 
+// Shipment represents shipping/tracking information for a fulfilled order.
 type Shipment struct {
 	// Name of the shipping courier used to deliver the order to its recipient.
 	Carrier string `json:"carrier"`
@@ -140,11 +146,13 @@ type Shipment struct {
 	DeliveredAt string `json:"delivered_at"`
 }
 
+// PrintifyConnect contains identifiers and links for the Printify Connect UI.
 type PrintifyConnect struct {
 	Url string `json:"url"`
 	Id  string `json:"id"`
 }
 
+// OrderSubmission represents the request body used to create an order.
 type OrderSubmission struct {
 	// A unique string identifier from the sales channel specifying the order name or id.
 	ExternalId string `json:"external_id"`
@@ -160,6 +168,7 @@ type OrderSubmission struct {
 	AddressTo Address `json:"address_to"`
 }
 
+// OrderSubmissionLineItem represents one line item in an order submission payload.
 type OrderSubmissionLineItem struct {
 	PrintProviderId int                         `json:"print_provider_id"`
 	BlueprintId     int                         `json:"blueprint_id"`
@@ -167,6 +176,7 @@ type OrderSubmissionLineItem struct {
 	PrintAreas      map[string][]PrintAreaValue `json:"print_areas"`
 }
 
+// PrintAreaValue represents image placement coordinates for custom print areas.
 type PrintAreaValue struct {
 	Src   string  `json:"src"`
 	Scale float64 `json:"scale"`
@@ -175,11 +185,13 @@ type PrintAreaValue struct {
 	Angle float64 `json:"angle"`
 }
 
+// ShipmentCalculationRequest represents a shipping quote request body.
 type ShipmentCalculationRequest struct {
 	LineItems []LineItem `json:"line_items"`
 	AddressTo Address    `json:"address_to"`
 }
 
+// ShipmentCalculationResponse represents calculated shipping prices by shipping method.
 type ShipmentCalculationResponse struct {
 	Standard        int `json:"standard"`
 	Express         int `json:"express"`

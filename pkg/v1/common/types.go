@@ -1,6 +1,8 @@
 package common
 
-// "print_on_side" key is used to set the type of side printing for canvases. There are three possible values:
+// PrintDetails controls side-print behavior for supported canvases.
+//
+// The "print_on_side" key supports three values:
 // "regular" - to extend print area to the sides of canvas
 // "mirror" - to keep original print area and mirror it to the sides
 // "off" - stop printing on sides
