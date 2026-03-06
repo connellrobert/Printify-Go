@@ -35,6 +35,9 @@ func ListResources[T any](endpoint string) func(c *Client) ([]T, error) {
 		if err != nil {
 			return nil, err
 		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
+		}
 
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
@@ -63,6 +66,9 @@ func ListResourceWithId[T any, ID int | string](endpoint string) func(c *Client,
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
@@ -96,6 +102,9 @@ func ListResourceWithTwoID[T any, IDONE, IDTWO int | string](endpoint string) fu
 			return nil, err
 		}
 
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
+		}
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
 		if err != nil {
@@ -118,6 +127,7 @@ func GetResourceById[T any, ID int | string](endpoint string) func(c *Client, id
 		if err != nil {
 			return nil, err
 		}
+
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
@@ -140,6 +150,9 @@ func GetResourceWithTwoId[T any, IDONE, IDTWO int | string](endpoint string) fun
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
@@ -168,6 +181,9 @@ func PostResourceWithoutReturn[T any](endpoint string) func(c *Client, body T) e
 		if err != nil {
 			return err
 		}
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
+		}
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
@@ -191,6 +207,9 @@ func PostResourceWithReturn[T any, R any](endpoint string) func(c *Client, body 
 		req, err := http.NewRequest("POST", c.Host+endpoint, bytes.NewBuffer(reqBody))
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
@@ -221,6 +240,9 @@ func PostResourceWithReturnTwoId[T any, R any, IDONE, IDTWO int | string](endpoi
 		req, err := http.NewRequest("POST", fmt.Sprintf(c.Host+endpoint, idOne, idTwo), bytes.NewBuffer(reqBody))
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
@@ -254,6 +276,10 @@ func PostResourceWithoutReturnTwoId[T any, IDONE, IDTWO int | string](endpoint s
 			return err
 		}
 
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
+		}
+
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
 		resp, err := checkResponse(c, req)
@@ -271,6 +297,9 @@ func PostNoResourceWithReturnTwoId[T any, IDONE, IDTWO int | string](endpoint st
 		req, err := http.NewRequest("POST", fmt.Sprintf(c.Host+endpoint, idOne, idTwo), nil)
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Set("Content-Type", "application/json")
@@ -301,6 +330,9 @@ func PostResourceWithReturnAndId[T any, R any, ID int | string](endpoint string)
 		if err != nil {
 			return nil, err
 		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
+		}
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
 		req.Header.Set("Content-Type", "application/json")
@@ -327,6 +359,9 @@ func PostNoResourceWithoutReturnTwoId[IDONE, IDTWO int | string](endpoint string
 		if err != nil {
 			return err
 		}
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
+		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 
@@ -345,6 +380,9 @@ func PostNoResourceWithoutReturn[ID int | string](endpoint string) func(c *Clien
 		req, err := http.NewRequest("POST", url, nil)
 		if err != nil {
 			return err
+		}
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
@@ -367,6 +405,9 @@ func PutResourceWithReturnAndTwoId[T any, R any, IDONE, IDTWO int | string](endp
 		req, err := http.NewRequest("PUT", fmt.Sprintf(c.Host+endpoint, idOne, idTwo), bytes.NewBuffer(reqBody))
 		if err != nil {
 			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.PAT)
@@ -396,6 +437,10 @@ func DeleteResourceWithTwoId[T any, IDONE, IDTWO int | string](endpoint string) 
 			return err
 		}
 
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
+		}
+
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
 		if err != nil {
@@ -412,6 +457,9 @@ func DeleteResourceWithId[T any, ID int | string](endpoint string) func(c *Clien
 		req, err := http.NewRequest("DELETE", url, nil)
 		if err != nil {
 			return err
+		}
+		if c.PAT == "" {
+			return fmt.Errorf("PAT is required")
 		}
 		req.Header.Add("Authorization", "Bearer "+c.PAT)
 		resp, err := checkResponse(c, req)
