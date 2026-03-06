@@ -6,6 +6,39 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines webhook operations and enables dependency injection.
+type Client interface {
+	ListWebhooksForShop() ([]Webhook, error)
+	CreateWebhook(id int, body Webhook) (*Webhook, error)
+	ModifyWebhook(idOne int, idTwo string, body Webhook) (*Webhook, error)
+	DeleteWebhook(idOne int, idTwo string) error
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates a webhook client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListWebhooksForShop() ([]Webhook, error) {
+	return ListWebhooksForShop(cl.c)
+}
+
+func (cl *client) CreateWebhook(id int, body Webhook) (*Webhook, error) {
+	return CreateWebhook(cl.c, id, body)
+}
+
+func (cl *client) ModifyWebhook(idOne int, idTwo string, body Webhook) (*Webhook, error) {
+	return ModifyWebhook(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) DeleteWebhook(idOne int, idTwo string) error {
+	return DeleteWebhook(cl.c, idOne, idTwo)
+}
+
 var (
 	ENDPOINT                        = "/v1/shops"
 	LIST_WEBHOOKS_FOR_SHOP_ENDPOINT = fmt.Sprintf("%s/%%d/webhooks.json", ENDPOINT)
@@ -22,7 +55,9 @@ var (
 	//
 	// The shop id used by this endpoint is taken from the client that created the request.
 	// Create the client with the desired shop id, or discover shops with shop.ListShops.
-	ListWebhooksForShop = common.ListResources[Webhook](LIST_WEBHOOKS_FOR_SHOP_ENDPOINT)
+	ListWebhooksForShop = func(c *common.Client) ([]Webhook, error) {
+		return common.ListResourceWithId[Webhook, int](LIST_WEBHOOKS_FOR_SHOP_ENDPOINT)(c, c.ShopID)
+	}
 	// CreateWebhook calls POST /v1/shops/{shopId}/webhooks.json.
 	//
 	// Signature:

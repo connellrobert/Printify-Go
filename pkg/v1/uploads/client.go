@@ -6,6 +6,39 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines uploads operations and enables dependency injection.
+type Client interface {
+	ListUploadedImages() ([]Image, error)
+	GetUploadedImage(id string) (*Image, error)
+	UploadImage(body ImageUpload) (*Image, error)
+	ArchiveUploadedImage(id string) error
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates an uploads client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListUploadedImages() ([]Image, error) {
+	return ListUploadedImages(cl.c)
+}
+
+func (cl *client) GetUploadedImage(id string) (*Image, error) {
+	return GetUploadedImage(cl.c, id)
+}
+
+func (cl *client) UploadImage(body ImageUpload) (*Image, error) {
+	return UploadImage(cl.c, body)
+}
+
+func (cl *client) ArchiveUploadedImage(id string) error {
+	return ArchiveUploadedImage(cl.c, id)
+}
+
 var (
 	ENDPOINT                        = "/v1/uploads"
 	LIST_UPLOADED_IMAGES_ENDPOINT   = fmt.Sprintf("%s/images.json", ENDPOINT)

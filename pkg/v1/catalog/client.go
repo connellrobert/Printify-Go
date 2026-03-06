@@ -6,6 +6,54 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines catalog operations and enables dependency injection.
+type Client interface {
+	ListBlueprints() ([]Blueprint, error)
+	GetBlueprint(id int) (*Blueprint, error)
+	ListPrintProvidersByBlueprint(id int) ([]PrintProvider, error)
+	ListVariantsByBlueprintPrintProvider(idOne int, idTwo int) ([]Variant, error)
+	GetShippingInformation(idOne int, idTwo int) (*Shipping, error)
+	ListPrintProviders() ([]PrintProvider, error)
+	GetPrintProvider(id int) (*PrintProvider, error)
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates a catalog client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListBlueprints() ([]Blueprint, error) {
+	return ListBlueprints(cl.c)
+}
+
+func (cl *client) GetBlueprint(id int) (*Blueprint, error) {
+	return GetBlueprint(cl.c, id)
+}
+
+func (cl *client) ListPrintProvidersByBlueprint(id int) ([]PrintProvider, error) {
+	return ListPrintProvidersByBlueprint(cl.c, id)
+}
+
+func (cl *client) ListVariantsByBlueprintPrintProvider(idOne int, idTwo int) ([]Variant, error) {
+	return ListVariantsByBlueprintPrintProvider(cl.c, idOne, idTwo)
+}
+
+func (cl *client) GetShippingInformation(idOne int, idTwo int) (*Shipping, error) {
+	return GetShippingInformation(cl.c, idOne, idTwo)
+}
+
+func (cl *client) ListPrintProviders() ([]PrintProvider, error) {
+	return ListPrintProviders(cl.c)
+}
+
+func (cl *client) GetPrintProvider(id int) (*PrintProvider, error) {
+	return GetPrintProvider(cl.c, id)
+}
+
 var (
 	ENDPOINT                                           = "/v1/catalog"
 	GET_BLUEPRINT_ENDPOINT                             = fmt.Sprintf("%s/blueprints/%%d.json", ENDPOINT)

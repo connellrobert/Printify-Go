@@ -6,6 +6,64 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines product operations and enables dependency injection.
+type Client interface {
+	ListProducts(id int) ([]Product, error)
+	GetProduct(idOne int, idTwo int) (*Product, error)
+	CreateProduct(id int, body Product) (*Product, error)
+	UpdateProduct(idOne int, idTwo int, body Product) (*Product, error)
+	DeleteProduct(idOne int, idTwo int) error
+	PublishProduct(idOne int, idTwo int, body Publish) error
+	UpdatePublishStatusToSucceeded(idOne int, idTwo int, body PublishReference) error
+	UpdatePublishStatusToFailed(idOne int, idTwo int, body PublishFailedRequest) error
+	NotifyProductUnpublished(idOne int, idTwo int) error
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates a product client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListProducts(id int) ([]Product, error) {
+	return ListProducts(cl.c, id)
+}
+
+func (cl *client) GetProduct(idOne int, idTwo int) (*Product, error) {
+	return GetProduct(cl.c, idOne, idTwo)
+}
+
+func (cl *client) CreateProduct(id int, body Product) (*Product, error) {
+	return CreateProduct(cl.c, id, body)
+}
+
+func (cl *client) UpdateProduct(idOne int, idTwo int, body Product) (*Product, error) {
+	return UpdateProduct(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) DeleteProduct(idOne int, idTwo int) error {
+	return DeleteProduct(cl.c, idOne, idTwo)
+}
+
+func (cl *client) PublishProduct(idOne int, idTwo int, body Publish) error {
+	return PublishProduct(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) UpdatePublishStatusToSucceeded(idOne int, idTwo int, body PublishReference) error {
+	return UpdatePublishStatusToSucceeded(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) UpdatePublishStatusToFailed(idOne int, idTwo int, body PublishFailedRequest) error {
+	return UpdatePublishStatusToFailed(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) NotifyProductUnpublished(idOne int, idTwo int) error {
+	return NotifyProductUnpublished(cl.c, idOne, idTwo)
+}
+
 var (
 	ENDPOINT                                    = "/v1/shops"
 	LIST_PRODUCTS_ENDPOINT                      = fmt.Sprintf("%s/%%d/products.json", ENDPOINT)

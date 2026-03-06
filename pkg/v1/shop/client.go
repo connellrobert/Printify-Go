@@ -6,6 +6,29 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines shop operations and enables dependency injection.
+type Client interface {
+	ListShops() ([]Shop, error)
+	DeleteShop(id int) error
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates a shop client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListShops() ([]Shop, error) {
+	return ListShops(cl.c)
+}
+
+func (cl *client) DeleteShop(id int) error {
+	return DeleteShop(cl.c, id)
+}
+
 var (
 	ENDPOINT             = "/v1/shops"
 	LIST_SHOPS_ENDPOINT  = fmt.Sprintf("%s.json", ENDPOINT)

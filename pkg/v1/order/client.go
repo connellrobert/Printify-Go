@@ -6,6 +6,54 @@ import (
 	"github.com/connellrobert/printify-go/pkg/common"
 )
 
+// Client defines order operations and enables dependency injection.
+type Client interface {
+	ListOrders() ([]Order, error)
+	GetOrderDetails(idOne int, idTwo int) (*Order, error)
+	SubmitOrder(idOne int, idTwo int, body Order) (*Order, error)
+	SubmitPrintifyExpressOrder(idOne int, idTwo int, body Order) (*Order, error)
+	SendOrderToProduction(idOne int, idTwo int, body Order) error
+	CalculateShippingCosts(id int, body ShipmentCalculationRequest) (*ShipmentCalculationResponse, error)
+	CancelOrder(idOne int, idTwo int) (*Order, error)
+}
+
+type client struct {
+	c *common.Client
+}
+
+// NewClient creates an order client implementation backed by common.Client.
+func NewClient(c *common.Client) Client {
+	return &client{c: c}
+}
+
+func (cl *client) ListOrders() ([]Order, error) {
+	return ListOrders(cl.c)
+}
+
+func (cl *client) GetOrderDetails(idOne int, idTwo int) (*Order, error) {
+	return GetOrderDetails(cl.c, idOne, idTwo)
+}
+
+func (cl *client) SubmitOrder(idOne int, idTwo int, body Order) (*Order, error) {
+	return SubmitOrder(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) SubmitPrintifyExpressOrder(idOne int, idTwo int, body Order) (*Order, error) {
+	return SubmitPrintifyExpressOrder(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) SendOrderToProduction(idOne int, idTwo int, body Order) error {
+	return SendOrderToProduction(cl.c, idOne, idTwo, body)
+}
+
+func (cl *client) CalculateShippingCosts(id int, body ShipmentCalculationRequest) (*ShipmentCalculationResponse, error) {
+	return CalculateShippingCosts(cl.c, id, body)
+}
+
+func (cl *client) CancelOrder(idOne int, idTwo int) (*Order, error) {
+	return CancelOrder(cl.c, idOne, idTwo)
+}
+
 var (
 	ENDPOINT                               = "/v1/shops"
 	LIST_ORDERS_ENDPOINT                   = fmt.Sprintf("%s/%%d/orders.json", ENDPOINT)
@@ -25,7 +73,9 @@ var (
 	//
 	// The shop id used by this endpoint is taken from the client that created the request.
 	// Create the client with the desired shop id, or discover shops with shop.ListShops.
-	ListOrders = common.ListResources[Order](LIST_ORDERS_ENDPOINT)
+	ListOrders = func(c *common.Client) ([]Order, error) {
+		return common.ListResourceWithId[Order, int](LIST_ORDERS_ENDPOINT)(c, c.ShopID)
+	}
 	// GetOrderDetails calls GET /v1/shops/{shopId}/orders/{orderId}.json.
 	//
 	// Signature:
@@ -48,7 +98,10 @@ var (
 	//
 	// shopId can be discovered with shop.ListShops.
 	// idTwo is unused because this endpoint has only one path identifier.
-	SubmitOrder = common.PostResourceWithReturnTwoId[Order, Order, int, int](SUBMIT_ORDER_ENDPOINT)
+	SubmitOrder = func(c *common.Client, idOne int, idTwo int, body Order) (*Order, error) {
+		_ = idTwo
+		return common.PostResourceWithReturnAndId[Order, Order, int](SUBMIT_ORDER_ENDPOINT)(c, idOne, body)
+	}
 	// SubmitPrintifyExpressOrder calls POST /v1/shops/{shopId}/orders/express.json.
 	//
 	// Signature:
@@ -60,7 +113,10 @@ var (
 	//
 	// shopId can be discovered with shop.ListShops.
 	// idTwo is unused because this endpoint has only one path identifier.
-	SubmitPrintifyExpressOrder = common.PostResourceWithReturnTwoId[Order, Order, int, int](SUBMIT_PRINTIFY_EXPRESS_ORDER_ENDPOINT)
+	SubmitPrintifyExpressOrder = func(c *common.Client, idOne int, idTwo int, body Order) (*Order, error) {
+		_ = idTwo
+		return common.PostResourceWithReturnAndId[Order, Order, int](SUBMIT_PRINTIFY_EXPRESS_ORDER_ENDPOINT)(c, idOne, body)
+	}
 	// SendOrderToProduction calls POST /v1/shops/{shopId}/orders/{orderId}/send_to_production.json.
 	//
 	// Signature:
