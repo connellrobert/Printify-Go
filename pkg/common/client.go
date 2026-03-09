@@ -471,6 +471,38 @@ func DeleteResourceWithId[T any, ID int | string](endpoint string) func(c *Clien
 	}
 }
 
+func PostResourceWithStringIdWithReturn[T any, R any](endpoint string) func(c *Client, id string, body T) (*R, error) {
+	return func(c *Client, id string, body T) (*R, error) {
+		reqBody, err := json.Marshal(body)
+		if err != nil {
+			return nil, err
+		}
+		req, err := http.NewRequest("POST", fmt.Sprintf(c.Host+endpoint, id), bytes.NewBuffer(reqBody))
+		if err != nil {
+			return nil, err
+		}
+		if c.PAT == "" {
+			return nil, fmt.Errorf("PAT is required")
+		}
+
+		req.Header.Set("Authorization", "Bearer "+c.PAT)
+		req.Header.Set("Content-Type", "application/json")
+		resp, err := checkResponse(c, req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		var resource R
+		err = json.NewDecoder(resp.Body).Decode(&resource)
+		if err != nil {
+			return nil, err
+		}
+
+		return &resource, nil
+	}
+}
+
 func checkResponse(c *Client, req *http.Request) (*http.Response, error) {
 	resp, err := c.Client.Do(req)
 	if err != nil {
