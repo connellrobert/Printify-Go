@@ -130,6 +130,8 @@ type Placeholder struct {
 type Image struct {
 	// See upload images for reference on how to upload images and get all needed properties.
 	Id string `json:"id"`
+	// Url of an image. See upload images for reference on how to upload images and get all needed properties.
+	Src string `json:"src"`
 	// Name of an image file.
 	Name string `json:"name"`
 	// Type of an image. Valid image types are image/png, image/jpg, image/jpeg.
@@ -146,6 +148,33 @@ type Image struct {
 	Scale float64 `json:"scale"`
 	// Integer value used to rotate image. See image positioning for reference on how to position images.
 	Angle int `json:"angle"`
+	// Defines a repeating graphical design applied to a product image
+	Pattern PlaceholderImagePattern `json:"pattern,omitempty"`
+	// Used for text layers
+	FontFamily string `json:"font_family,omitempty"`
+	// Used for text layers
+	FontSize int `json:"font_size,omitempty"`
+	// Used for text layers
+	FontWeight string `json:"font_weight,omitempty"`
+	// Used for text layers
+	FontColor string `json:"font_color,omitempty"`
+	// Used for text layers
+	FontStyle string `json:"font_style,omitempty"`
+	// Used for text layers
+	InputText string `json:"input_text,omitempty"`
+	// Used for text layers
+	TextAlign string `json:"text_align,omitempty"`
+}
+
+type PlaceholderImagePattern struct {
+	// Horizontal spacing expressed relative to width, where 0.5 would mean the item should repeat each half-width of image, and 1 means no spacing, 1.5 would mean 50% spacing etc. See image positioning for reference on how to position images.
+	SpacingX float64 `json:"spacing_x"`
+	// Float value. Vertical Spacing expressed relative to height, where 0.5 would mean the item should repeat each half-height of image, and 1 means no spacing, 1.5 would mean 50% spacing etc.
+	SpacingY float64 `json:"spacing_y"`
+	// Float value. Allows changing the axis along which items repeat. 0 means horizontal. Accepts values from -45 to +45 (Because the result of all other angles can already be achieved by staying within this range).
+	Angle float64 `json:"angle"`
+	// Float value. Allows specifying offset between 2 lines. Setting this to 0.5 will produce a "brick" pattern. Accepts values between -1 and 1.
+	Offset float64 `json:"offset"`
 }
 
 // The "publish" button in the Printify app only locks the product on the Printify app and triggers the product:publish:started event if you are subscribed to it, see See Product events for reference. To publish a product, you need to create it manually on your store from the data you can obtain from the product resource or develop a system to automate that. Once done, you can use the Publish succeeded endpoint or Publish failed endpoint to unlock the product.
