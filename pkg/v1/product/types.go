@@ -155,7 +155,8 @@ type Image struct {
 	// Used for text layers
 	FontSize int `json:"font_size,omitempty"`
 	// Used for text layers
-	FontWeight string `json:"font_weight,omitempty"`
+	// Note: API documentation states this is a string, but actual results show it as an integer. We're using an interface to accommodate the potential that the API can return either.
+	FontWeight interface{} `json:"font_weight,omitempty"`
 	// Used for text layers
 	FontColor string `json:"font_color,omitempty"`
 	// Used for text layers
