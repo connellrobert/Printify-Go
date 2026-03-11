@@ -39,7 +39,7 @@ func ExampleListUploadedImages() {
 
 func ExampleGetUploadedImage() {
 	c, closeFn := newUploadsTestClient(func(mux *http.ServeMux) {
-		mux.HandleFunc("/v1/uploads/images/img_1.json", func(w http.ResponseWriter, _ *http.Request) {
+		mux.HandleFunc("/v1/uploads/img_1.json", func(w http.ResponseWriter, _ *http.Request) {
 			_, _ = w.Write([]byte(`{"id":"img_1","file_name":"design.png"}`))
 		})
 	})
@@ -65,7 +65,7 @@ func ExampleUploadImage() {
 
 func ExampleArchiveUploadedImage() {
 	c, closeFn := newUploadsTestClient(func(mux *http.ServeMux) {
-		mux.HandleFunc("/v1/uploads/images/img_1/archive.json", func(w http.ResponseWriter, _ *http.Request) {
+		mux.HandleFunc("/v1/uploads/img_1/archive.json", func(w http.ResponseWriter, _ *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		})
 	})

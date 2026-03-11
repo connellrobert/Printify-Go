@@ -42,9 +42,9 @@ func (cl *client) ArchiveUploadedImage(id string) error {
 var (
 	ENDPOINT                        = "/v1/uploads"
 	LIST_UPLOADED_IMAGES_ENDPOINT   = fmt.Sprintf("%s/images.json", ENDPOINT)
-	GET_UPLOADED_IMAGE_ENDPOINT     = fmt.Sprintf("%s/images/%%s.json", ENDPOINT)
+	GET_UPLOADED_IMAGE_ENDPOINT     = fmt.Sprintf("%s/%%s.json", ENDPOINT)
 	UPLOAD_IMAGE_ENDPOINT           = fmt.Sprintf("%s/images.json", ENDPOINT)
-	ARCHIVE_UPLOADED_IMAGE_ENDPOINT = fmt.Sprintf("%s/images/%%s/archive.json", ENDPOINT)
+	ARCHIVE_UPLOADED_IMAGE_ENDPOINT = fmt.Sprintf("%s/%%s/archive.json", ENDPOINT)
 )
 
 var (
